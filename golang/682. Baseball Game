@@ -22,9 +22,7 @@ Explanation:
 The total sum is 5 + 10 + 15 = 30.
 */
 
-
 // Mine
-
 func calPoints(ops []string) int {
     // mystack = New()
     mystack := new(Stack)
