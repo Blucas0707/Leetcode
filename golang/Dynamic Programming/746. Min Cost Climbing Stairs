@@ -1,0 +1,69 @@
+You are given an integer array cost where cost[i] is the cost of ith step on a staircase. Once you pay the cost, you can either climb one or two steps.
+
+You can either start from the step with index 0, or the step with index 1.
+
+Return the minimum cost to reach the top of the floor.
+
+ 
+
+Example 1:
+
+Input: cost = [10,15,20]
+Output: 15
+Explanation: You will start at index 1.
+- Pay 15 and climb two steps to reach the top.
+The total cost is 15.
+
+/*
+從最後一階開始考慮，剩一階或剩兩階中，取較小的結果，而剩一階或剩二階的計算過程則是該階cost + min(剩一階,剩二階)。
+Recursion 會Timeout
+要使用DP的memorization 去將exponential 降到linear
+*/
+
+
+func minCostClimbingStairs(cost []int) int {
+    n := len(cost)
+    memo := make(map[int]int)
+    return min(MemominCostClimbingStairs(cost, n-1, memo),MemominCostClimbingStairs(cost, n-2, memo))
+    
+}
+
+// Memo
+// N = cost length
+// time complexity: O(N)
+// space complexity: O(N)
+func MemominCostClimbingStairs(cost []int,n int, memo map[int]int) int {
+    if val, ok := memo[n]; ok {
+        return val
+    }
+    if n < 0 {
+        return 0 
+    }
+    if n == 0 || n == 1 {
+        memo[n] = cost[n]
+        return memo[n]
+    }
+    memo[n] = cost[n] + min(MemominCostClimbingStairs(cost,n-1, memo),MemominCostClimbingStairs(cost,n-2, memo))
+    return memo[n]
+}
+
+// Recursion
+// N = cost length
+// time complexity: O(2^N)
+// space complexity: O(N)
+func RecursionminCost(cost []int, n int) int {
+    if n < 0 {
+        return 0 
+    }
+    if n == 0 || n == 1 {
+        return cost[n]
+    }
+    return cost[n] + min(RecursionminCost(cost,n-1),RecursionminCost(cost,n-2))
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
