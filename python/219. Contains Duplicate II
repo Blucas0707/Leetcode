@@ -1,0 +1,76 @@
+link: https://leetcode.com/problems/contains-duplicate-ii/
+
+Given an integer array nums and an integer k, return true if there are two distinct indices i and j in the array such that nums[i] == nums[j] and abs(i - j) <= k.
+
+Example 1:
+
+Input: nums = [1,2,3,1], k = 3
+Output: true
+Example 2:
+
+Input: nums = [1,0,1,1], k = 1
+Output: true
+Example 3:
+
+Input: nums = [1,2,3,1,2,3], k = 2
+Output: false
+ 
+
+Constraints:
+
+1 <= nums.length <= 105
+-109 <= nums[i] <= 109
+0 <= k <= 105
+
+# Idea: 就是跟最後出現的num index去做比較
+# 1. exception: nums.length = 0 => False
+# 2. 以一個match dict 去存num 位置，如果num存在dict 且 dict 跟現在index diff <= k, return True, 若否，則更新num在match中的index位置
+
+# Choice 1
+class Solution:
+    def containsNearbyDuplicate(self, nums: List[int], k: int) -> bool:
+        # exception: nums.length = 1
+        if len(nums) == 1:
+            return False
+        
+        match = {}
+        for i, num in enumerate(nums):
+            if num in match and i - match[num] <= k:
+                return True
+            match[num] = i
+        return False
+
+# Idea:
+# 1. exception: nums.length = 0 => False
+# 2. 將元素遍歷存到dict, key是元素，val是index，並判斷每次新的index, 是不是比原本的差值小，如果是的話，就改變list中的最大最小index
+# 3. 判斷match 中 value list 長度為二的最大最小差，是否小於等於k
+
+# Choice 2
+class Solution:
+    def containsNearbyDuplicate(self, nums: List[int], k: int) -> bool:
+        # exception: nums.length = 1
+        if len(nums) == 1:
+            return False
+        
+        # save every num to dict, key:num, value: list(minIndex, maxIndex)
+        match = {}
+        for i, num in enumerate(nums):
+            if match.get(num, None) == None:
+                match[num] = []
+                match[num].append(i)
+            else:
+                if len(match[num]) == 1:
+                    match[num].append(i)
+                else:
+                    minIndex = match[num][0]
+                    maxIndex = match[num][1]
+                    if i > maxIndex and i - maxIndex < maxIndex - minIndex:
+                        match[num][0] = maxIndex
+                        match[num][1] = i
+                        
+        # judge list.length == 2, find maxIndex - minIndex <= k
+        for key, vallist in match.items():
+            if len(vallist) == 2:
+                if vallist[1] - vallist[0] <= k:
+                    return True
+        return False
