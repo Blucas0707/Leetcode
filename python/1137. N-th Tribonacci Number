@@ -53,3 +53,4 @@ class Solution:
         
         tri[n] = self.memo_tribonacci(n-1,tri) + self.memo_tribonacci(n-2,tri) + self.memo_tribonacci(n-3,tri)
         return tri[n]
+        
